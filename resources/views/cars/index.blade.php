@@ -5,6 +5,9 @@
         <h1>Car Inventory</h1>
         <a href="{{ route('cars.create') }}" class="btn btn-primary">Add New Car</a>
     </div>
+    
+    <!-- Vue component -->
+    <car-search @search="filterCars"></car-search>
 
     <div class="card">
         <div class="card-body">
@@ -22,10 +25,10 @@
                     </thead>
                     <tbody>
                         @foreach($cars as $car)
-                            <tr>
+                            <tr class="car-row">
                                 <td>{{ $car->id }}</td>
-                                <td>{{ $car->make }}</td>
-                                <td>{{ $car->model }}</td>
+                                <td class="car-make">{{ $car->make }}</td>
+                                <td class="car-model">{{ $car->model }}</td>
                                 <td>{{ $car->year }}</td>
                                 <td>{{ $car->color }}</td>
                                 <td>
@@ -45,4 +48,23 @@
             @endif
         </div>
     </div>
+
+    <script>
+        // Client-side search functionality
+        window.addEventListener('load', function() {
+            window.filterCars = function(searchTerm) {
+                searchTerm = searchTerm.toLowerCase();
+                document.querySelectorAll('.car-row').forEach(function(row) {
+                    const make = row.querySelector('.car-make').textContent.toLowerCase();
+                    const model = row.querySelector('.car-model').textContent.toLowerCase();
+                    
+                    if (make.includes(searchTerm) || model.includes(searchTerm) || searchTerm === '') {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            };
+        });
+    </script>
 @endsection
